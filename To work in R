@@ -1,0 +1,50 @@
+library(ggplot2)
+library("memisc") # две и более регрессий в одной табличке ##mtable
+library("psych") # описательные статистики
+library("lattice") #graficas
+library("MASS")
+library("lmtest") # тестирование гипотез в линейных моделях
+library("foreign") # загрузка данных в разных форматах
+library("grid") #grid adds an nx by ny rectangular grid to an existing plot.
+library("vcd")
+library("hexbin") # графики
+library("pander") #Generic pander method
+library("dplyr") # Manipular datos
+library("tidyverse")# вместо ggplot2 (графики) и dplyr (манипуляции с данными)
+library("knitr") # графики
+library("ggplot2") # графики
+library(leaps) # test variables выбор переменных
+
+##Анализ временных рядов
+library("lubridate") # работа с датами
+library("zoo") # временные ряды
+library("xts") # еще ряды
+library("dplyr") # манипуляции с данными
+library("ggplot2") # графики
+library("forecast")
+library("sandwich") # vcovHC, vcovHAC
+library(memisc) ##mtable
+library(dftools)
+rattle()
+
+Otros
+library("rattle") # R DATA MINER
+library("randomForest") #Random Forest
+library("spikeslab") # регрессия пик-плато
+library("ggplot2") # графики
+library("dplyr") # манипуляции с данными
+library("reshape2") # перевод таблиц: широкая-длинная
+library("MCMCpack") # байесовский подход к популярным моделям
+library("quantreg") # квантильная регрессия
+library("randomForest") # случайный лес randomForest(Y ~ .,data=data, ntree=500, mtry=10, importance=TRUE, na.action=randomForest::na.roughfix, replace=FALSE)
+library("rattle") # визуализация деревьев
+library("caret") # стандартный подход к регрессионным и классификационным задачам
+library("rpart") # классификационные и регрессионные деревья ##MODEL <- rpart(Y ~ ., data=data, method="anova", parms=list(split="information"), control=rpart.control(usesurrogate=0,maxsurrogate=0), model=TRUE)
+library("nnet") #nueronal net
+library("neuralnet") #nueronal net
+library("caret") ##createDataPartition
+#in_train <- createDataPartition(y = F3$MPHS, p = 0.70, list = F)
+#F3_train <- F3[in_train, ] # recoger la parte de aprendizaje de la muestra
+#F3_test <- F3[-in_train, ] # el resto irá a la parte de prueba de la muestra
+
+`
