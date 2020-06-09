@@ -1,0 +1,12 @@
+####Mergering
+Merged <- merge(x = data1, y = data2, by.x = 'data1.X', by.y = 'data.2Y',
+            sort = TRUE, suffixes = c(".x",".y"), no.dups = T, all = F,
+            incomparables = NULL, fill= 'NA')
+#### Eliminar duplicados
+Data <- Data %>% group_by( Data$X) %>% summarise_each(funs(max))
+########## subset con or | es un or
+data  <-  subset(data, data$X!= 'NA' | data$Y!= 'NA') 
+
+########## subset con or &  es un and
+data  <-  subset(data, data$X!= 'NA' &  data$Y!= 'NA') 
+
