@@ -24,3 +24,12 @@ data <- data %>%
 for(i in 1:ncol(data)){
   data[is.na(data[,i]), i] <- mean(data[,i], na.rm = TRUE)
 }
+
+
+### Cambiar de lo que dice una fila a otra info
+Movi <- 
+  Movi %>%
+  mutate(localidad = case_when(
+    str_detect(localidad, "ANTONIO NARIÃ‘O") ~ "ANTONIO NARIÑO",
+    TRUE ~ localidad
+  )  )
