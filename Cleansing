@@ -33,3 +33,29 @@ Movi <-
     str_detect(localidad, "ANTONIO NARIÃ‘O") ~ "ANTONIO NARIÑO",
     TRUE ~ localidad
   )  )
+  
+  
+  ######## Eliminar tildes
+  library(stringi)
+a <- c("Mesa", "Jabón", "piedra", "césar", "cigüeña")
+toupper(stri_trans_general(a,"Latin-ASCII"))
+[1] "MESA"    "JABON"   "PIEDRA"  "CESAR"   "CIGUENA"
+
+
+chartr("ÁÉÍÓÚ", "AEIOU", toupper(a))
+[1] "MESA"   "JABON"  "PIEDRA" "CESAR" 
+
+
+#### Split using one column
+
+A <- data[1:40917,]
+df <- strsplit( A$fecha_reg_solic, " ", useBytes = F) 
+df  <- matrix(unlist(df), ncol=2, byrow=TRUE)
+df   <- as.data.frame(df)
+A$fecha_reg_solic <- df$V1
+
+
+
+### from enconding utc 8 to latin1
+
+x$x <- iconv(x$x,  to="latin1", sub="byte")
