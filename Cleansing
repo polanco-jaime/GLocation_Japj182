@@ -59,3 +59,9 @@ A$fecha_reg_solic <- df$V1
 ### from enconding utc 8 to latin1
 
 x$x <- iconv(x$x,  to="latin1", sub="byte")
+
+
+## combinando columnas en una sola 
+library(tidyr)
+
+a = unite(data[,1:2], col,  sep = "_", remove = TRUE, na.rm = FALSE)
