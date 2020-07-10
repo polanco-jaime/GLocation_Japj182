@@ -68,3 +68,9 @@ x$x <- iconv(x$x,  to="latin1", sub="byte")
 library(tidyr)
 
 a = unite(data[,1:2], col,  sep = "_", remove = TRUE, na.rm = FALSE)
+
+## Cambiar un carracter en una columna
+Df$X <- gsub('\\,+', '', Df$X)
+## Cambiar un carracter de las columnas en todas las tablas
+Df[] <- lapply(Df, gsub, pattern=',', replacement='')
+
