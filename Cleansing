@@ -1,6 +1,10 @@
 library(dplyr)
 library(tidyverse)
 library(purrr)
+##### cambiando numeros cientificos
+options(scipen=999)
+
+
 ####Mergering
 Merged <- merge(x = data1, y = data2, by.x = 'data1.X', by.y = 'data.2Y',
             sort = TRUE, suffixes = c(".x",".y"), no.dups = T, all = F,
