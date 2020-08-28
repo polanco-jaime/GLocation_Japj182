@@ -3,7 +3,15 @@ library(tidyverse)
 library(purrr)
 ##### cambiando numeros cientificos
 options(scipen=999)
+################## change format date in a loop
 
+# Column number with dates ex [from colnames see the number of column with dates]
+list = c(57, 61 ,62 ,72, 73, 91, 99, 100, 101, 102, 103, 104, 105, 117, 126, 128)
+
+for (i in list) {
+df[[ i ]] = as.Date(as.character(df[[ i  ]]), format = '%Y%m%d')
+}
+######################
 
 ####Mergering
 Merged <- merge(x = data1, y = data2, by.x = 'data1.X', by.y = 'data.2Y',
