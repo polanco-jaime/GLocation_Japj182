@@ -1,0 +1,121 @@
+library(quantmod) # Modelado Financiero
+library(PerformanceAnalytics)
+library(PortfolioAnalytics)
+Colcap = Indices
+Colcap[[1]] <- as.Date(Colcap[[1]], format = '%Y%m%d')
+Colcap <- subset(Colcap, Colcap$Fecha > '2020-04-01')
+https://www.bvc.com.co/pps/tibco/portalbvc/Home/Mercados/enlinea/acciones
+
+COLCAP = Colcap
+ECOPETROL = Ecopetrol
+CEMARGOS = cemargos
+AVIANCA = Avianca
+#### Converting to a xts format analys ###
+library(xts)
+
+COLCAP <- xts(COLCAP[, c(-1,-2)], order.by= as.Date(COLCAP[[1]]))
+ECOPETROL <- xts(ECOPETROL[, c(-1,-2)], order.by= as.Date(ECOPETROL[[2]]))
+CEMARGOS <- xts(CEMARGOS[, c(-1,-2)], order.by= as.Date(CEMARGOS[[2]]))
+AVIANCA <- xts(AVIANCA[, c(-1,-2)], order.by= as.Date(AVIANCA[[2]]))
+nombres <- c (ECOPETROL,CEMARGOS, AVIANCA) 
+
+#rendimientos 
+Colcap_ret <- na.omit(dailyReturn(COLCAP[,1], type = "log")) # Solo el cierre ajustado
+
+Ecopetrol_ret <- na.omit(dailyReturn(ECOPETROL[,5], type = "log")) # Solo el cierre ajustado
+cemargos_ret <- na.omit(dailyReturn(CEMARGOS[,5], type = "log")) 
+Avianca_ret <- na.omit(dailyReturn(AVIANCA[,5], type = "log")) 
+colnames(Ecopetrol_ret)[1] <- 'Ecopetrol_ret'
+colnames(cemargos_ret)[1] <- 'cemargos_ret'
+colnames(Avianca_ret)[1] <- 'Avianca_ret'
+rendimientos_individuales = cbind(Ecopetrol_ret, cemargos_ret)
+rendimientos_individuales = cbind(rendimientos_individuales, Avianca_ret)
+
+# Rendimientos ponderados del portafolio
+rendimientos_portafolio_estatico <- Return.portfolio(rendimientos_individuales)
+chart.CumReturns(rendimientos_portafolio_estatico)
+# Potencial de diversificación
+CAPM.beta(rendimientos_portafolio_estatico, Colcap_ret, Rf=0.06/252) # > 1 mas riesgoso que el IPC
+
+# Rendimiento de exceso ajustado a la tasa de riesgo libre de 6%
+CAPM.jensenAlpha(rendimientos_portafolio_estatico, Colcap_ret, Rf=0.06/252) # >0 le ganas al IPC
+
+# Rendimiento por unidad de riesgo ajustado
+SharpeRatio(rendimientos_portafolio_estatico, Rf=0.06/252)
+
+# Rendimientos, Riesgo y SharpeRatio anualizados
+table.AnnualizedReturns(rendimientos_portafolio_estatico)
+table.CalendarReturns(rendimientos_portafolio_estatico)
+
+# Especificamos el portafolio
+portf <- portfolio.spec(colnames(rendimientos_individuales))
+
+# Añadimos restricciones
+portf <- add.constraint(portf, type = "weight_sum", min_sum=0.99, max_sum=1.01) 
+portf <- add.constraint(portf, type = "box", min=0.01, max=.99) # para cada activo individual
+portf <- add.constraint(portf, type = "transaction_cost", ptc = 0.01) # Costo de transacción proporcional del 1%
+
+# Añadimos objetivos {anualizados}
+portf <- add.constraint(portf, type="full_investment")
+portf <- add.constraint(portf, type="long_only")
+portf <- add.objective(portf, type = "return", name ="mean") #maximizar el rendimiento
+portf <- add.objective(portf, type = "risk", name= "StdDev", target = 0.1) #M
+
+
+## Backtesting Otimización
+#
+
+# Portafolios aleatorios
+pa <- random_portfolios(portf, 10000, "sample") #genera 10000 portafolios
+
+# Rebalanceo
+op_reb <- optimize.portfolio.rebalancing(rendimientos_individuales,
+                                         portf, 
+                                         optimize_method = "random",
+                                         rp=pa,
+                                         rebalance_on = "months",
+                                         training_period = 30, 
+                                         rolling_window = 14) 
+
+
+# Visualización los portafolios rebalanceados {pesos dinámicos}
+chart.Weights(op_reb, main="Pesos Rebalanceados en el tiempo")
+x <- extractWeights(op_reb)
+
+### Comparación ###
+
+# Pesos equilibrados
+pesos_equilibrados <- rep(1/ncol(rendimientos_individuales),ncol(rendimientos_individuales)) # pesos equilibrados
+portafolio_equilibrado <- Return.portfolio(rendimientos_individuales, weights =pesos_equilibrados)
+colnames(portafolio_equilibrado) <- "Portafolio Estático"
+
+# Pesos rebalanceados
+pesos_rebalanceados <- extractWeights(op_reb)
+porfolio_rebalanceado <- Return.portfolio(rendimientos_individuales, weights = pesos_rebalanceados)
+colnames(porfolio_rebalanceado) <- "Portafolio Dinámico Rebalanceado"
+
+# Grafico de desempleño en el tiempo
+desempeño <- cbind(porfolio_rebalanceado, portafolio_equilibrado, Colcap_ret)
+x11()
+charts.PerformanceSummary(desempeño, main = "Desempeño en el tiempo", legend.loc = "center" )
+
+#################################################################
+# Potencial de diversificación
+CAPM.beta(rendimientos_individuales, Colcap_ret, Rf=0.06/252) # > 1 mas riesgoso que el IPC
+# Rendimiento de exceso ajustado a la tasa de riesgo libre de 6%
+CAPM.jensenAlpha(rendimientos_portafolio_estatico, rendimientos_ipc, Rf=0.06/252) # >0 le ganas al IPC
+
+
+CAPM.beta(Ecopetrol_ret, Colcap_ret, Rf=0.06/252) # > 1 mas riesgoso que el IPC
+SharpeRatio(Ecopetrol_ret, Rf=0.06/252)
+
+# Rendimientos, Riesgo y SharpeRatio anualizados
+table.AnnualizedReturns(Ecopetrol_ret)
+table.CalendarReturns(Ecopetrol_ret)
+
+### Especificación modelo dinámico ###
+
+# Especificamos el portafolio
+portf <- portfolio.spec(colnames(Ecopetrol_ret))
+
+https://www.youtube.com/watch?v=boyKnb0AVPs
