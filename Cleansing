@@ -86,3 +86,11 @@ Df$X <- gsub('\\,+', '', Df$X)
 ## Cambiar un carracter de las columnas en todas las tablas
 Df[] <- lapply(Df, gsub, pattern=',', replacement='')
 
+
+
+############# 
+install curl from ubuntu
+sudo apt-get install libcurl4-openssl-dev--insecure
+---
+instal httr from ubuntu
+sudo apt-get update -y
