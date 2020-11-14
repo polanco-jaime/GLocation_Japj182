@@ -94,3 +94,19 @@ sudo apt-get install libcurl4-openssl-dev--insecure
 ---
 instal httr from ubuntu
 sudo apt-get update -y
+##############
+
+
+Step 1 — Installing System Dependencies for devtools
+We’ll install devtools from the interactive shell, but before we do, we’ll need to install these system dependencies:
+
+sudo apt-get install build-essential libcurl4-gnutls-dev libxml2-dev libssl-dev
+Once this is complete, we’re ready to proceed.
+
+Step 2 — Installing the Devtools Package
+Devtools will enable us to install and build packages directly from GitHub, BitBucket, local files, as well as to install specific versions from CRAN. To make devtools available site-wide, we’ll enter R’s shell as root:
+
+sudo -i R
+From within the monitor, we’ll use the install.packages() function to install devtools from the official Comprehensive R Archive Network (CRAN).
+
+install.packages('devtools')
