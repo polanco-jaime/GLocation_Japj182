@@ -110,3 +110,14 @@ sudo -i R
 From within the monitor, we’ll use the install.packages() function to install devtools from the official Comprehensive R Archive Network (CRAN).
 
 install.packages('devtools')
+#######################
+
+abrir  r desde Ubuntu 
+sudo -i R
+
+
+#### PARA INSTALAR  tableschema.r
+
+sudo apt-get install -y 
+sudo apt-get install -y libv8-dev
+
