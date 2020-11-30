@@ -4,7 +4,7 @@ library(purrr)
 ##### cambiando numeros cientificos
 options(scipen=999)
 ################
-readr::default_locale(url_reactivacion)
+readr::guess_encoding()(url_reactivacion)
 
 ################## change format date in a loop
 
